@@ -26,7 +26,7 @@ model User {
 
 model Folder {
   id                 Int       @id @default(autoincrement())
-  name               String
+  name               String    @db.VarChar(50)
   dateOfCreation     DateTime  @default(now())
   dateOfModification DateTime?
   User               User      @relation(fields: [userId], references: [id])
