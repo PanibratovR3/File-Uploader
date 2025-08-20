@@ -21,7 +21,6 @@ model User {
   username  String   @unique
   password  String   @unique
   folders   Folder[]
-  files     File[]
 }
 
 model Folder {
@@ -29,8 +28,8 @@ model Folder {
   name               String    @db.VarChar(50)
   dateOfCreation     DateTime  @default(now())
   dateOfModification DateTime?
-  User               User      @relation(fields: [userId], references: [id])
-  userId             Int
+  User               User      @relation(fields: [ownerId], references: [id])
+  ownerId            Int
   files              File[]
 }
 
@@ -40,8 +39,12 @@ model File {
   size           Int
   dateOfCreation DateTime @default(now())
   path           String
-  User           User     @relation(fields: [userId], references: [id])
-  userId         Int
   Folder         Folder   @relation(fields: [folderId], references: [id])
   folderId       Int
+}
+
+model Session {
+  id        String   @id
+  sid       String   @unique
+  expiresAt DateTime
 }
