@@ -39,6 +39,7 @@ model File {
   name           String
   size           Int
   dateOfCreation DateTime @default(now())
+  path           String
   User           User     @relation(fields: [userId], references: [id])
   userId         Int
   Folder         Folder   @relation(fields: [folderId], references: [id])
