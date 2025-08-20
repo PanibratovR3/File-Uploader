@@ -6,6 +6,13 @@
     </head>
     <body>
         <h1>Sign up</h1>
+        <ul>
+            <% if (locals.errors) { %>
+                <% errors.forEach((error) => { %>
+                    <li><%= error.msg %></li>
+                <% }); %>
+            <% } %>
+        </ul>
         <div>
             <form action="/sign-up" method="POST">
                 <div>
