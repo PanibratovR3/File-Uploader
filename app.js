@@ -1,8 +1,11 @@
 const express = require("express");
 const path = require("path");
 const { body, validationResult, check } = require("express-validator");
+const session = require("express-session");
 const prisma = require("./config/prismaClient");
 const bcrypt = require("bcryptjs");
+const { PrismaSessionStore } = require("@quixo3/prisma-session-store");
+const passport = require("./config/passport");
 
 const nameLengthError = "must be between 3 and 10 characters.";
 const nameAlphaError = "must contain only letters.";
@@ -35,12 +38,31 @@ const validateUser = [
 
 const PORT = 3000;
 const app = express();
+app.use(
+  session({
+    cookie: {
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    },
+    secret: "abracadabra",
+    resave: true,
+    saveUninitialized: true,
+    store: new PrismaSessionStore(prisma, {
+      checkPeriod: 2 * 60 * 1000,
+      dbRecordIdIsSessionId: true,
+      dbRecordIdFunction: undefined,
+    }),
+  })
+);
+
+app.use(passport.session());
 app.use(express.urlencoded({ extended: true }));
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
 app.get("/", (request, response) => {
-  response.render("index");
+  response.render("index", {
+    user: request.user,
+  });
 });
 
 app.get("/sign-up", (request, response) => {
@@ -89,6 +111,27 @@ app.post("/sign-up", [
 
 app.get("/log-in", (request, response) => {
   response.render("log-in-form");
+});
+
+app.post(
+  "/log-in",
+  passport.authenticate("local", {
+    successRedirect: "/",
+    failureRedirect: "/",
+  })
+);
+
+app.get("/log-out", (request, response, next) => {
+  request.logout((error) => {
+    if (error) {
+      return next(error);
+    }
+    response.redirect("/");
+  });
+});
+
+app.use((error, request, response, next) => {
+  console.error(error);
 });
 
 app.listen(PORT, () =>
