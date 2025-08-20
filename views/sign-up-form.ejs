@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Sign Up</title>
+    </head>
+    <body>
+        <h1>Sign up</h1>
+        <div>
+            <form action="/sign-up" method="POST">
+                <div>
+                    <label for="firstName">First name:</label>
+                    <input type="text" name="firstName" id="firstName" placeholder="John" required/>
+                </div>
+                <div>
+                    <label for="lastName">Last name:</label>
+                    <input type="text" name="lastName" id="lastName" placeholder="Doe" required/>
+                </div>
+                <div>
+                    <label for="username">Username:</label>
+                    <input type="email" name="username" id="username" placeholder="jdoe@mail.com" required/>
+                </div>
+                <div>
+                    <label for="password">Password:</label>
+                    <input type="password" name="password" id="password" required />
+                </div>
+                <div>
+                    <label for="confirmPassword">Confirm password:</label>
+                    <input type="password" name="confirmPassword" id="confirmPassword" required />
+                </div>
+                <div>
+                    <button type="submit">Sign Up</button>
+                </div>
+            </form>
+        </div>
+    </body>
+</html>
