@@ -87,6 +87,10 @@ app.post("/sign-up", [
   },
 ]);
 
+app.get("/log-in", (request, response) => {
+  response.render("log-in-form");
+});
+
 app.listen(PORT, () =>
   console.log(`Server was launched: http://localhost:${PORT}/`)
 );
