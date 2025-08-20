@@ -1,7 +1,8 @@
 const express = require("express");
 const path = require("path");
 const { body, validationResult, check } = require("express-validator");
-const e = require("express");
+const prisma = require("./config/prismaClient");
+const bcrypt = require("bcryptjs");
 
 const nameLengthError = "must be between 3 and 10 characters.";
 const nameAlphaError = "must contain only letters.";
@@ -48,14 +49,40 @@ app.get("/sign-up", (request, response) => {
 
 app.post("/sign-up", [
   validateUser,
-  (request, response) => {
+  async (request, response) => {
     const errors = validationResult(request);
     if (!errors.isEmpty()) {
       response.render("sign-up-form", {
         errors: errors.array(),
       });
     } else {
-      console.log("Validation OK!");
+      const { firstName, lastName, username, password } = request.body;
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const existingUsers = await prisma.user.findMany({
+        where: {
+          username: username,
+          password: hashedPassword,
+        },
+      });
+      if (existingUsers && existingUsers.length > 0) {
+        response.render("sign-up-form", {
+          errors: [
+            {
+              msg: "Error. Username or password already exists.",
+            },
+          ],
+        });
+      } else {
+        await prisma.user.create({
+          data: {
+            firstName: firstName,
+            lastName: lastName,
+            username: username,
+            password: hashedPassword,
+          },
+        });
+        response.redirect("/");
+      }
     }
   },
 ]);
