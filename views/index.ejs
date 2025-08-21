@@ -8,7 +8,22 @@
         <h1>File uploader</h1>
         <% if (locals.user) { %>
             <h2>Welcome <%= user.username %></h2>
-            <a href="/log-out">Log out</a>
+            <a href="/log-out"><button type="button">Log out</button></a>
+            <div>
+                <a href="/create-folder">Add new folder</a>
+                <div>
+                    <% if (locals.folders && folders.length > 0) {%>
+                        <div><%= user.firstName %>'s folders</div>
+                        <div class="folders-containers">
+                            <% folders.forEach((folder) => { %>
+                                <div><%= folder.name %></div>
+                            <% }); %>
+                        </div>
+                    <% } else { %>
+                        <div>There is no folder.</div>
+                    <% } %>
+                </div>
+            </div>
         <% } else { %>
             <h2>You're not logged in.</h2>
             <p><a href="/log-in">Log in.</a></p>

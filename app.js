@@ -59,10 +59,20 @@ app.use(express.urlencoded({ extended: true }));
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
-app.get("/", (request, response) => {
-  response.render("index", {
-    user: request.user,
-  });
+app.get("/", async (request, response) => {
+  if (request.user) {
+    const foldersOfUser = await prisma.folder.findMany({
+      where: {
+        ownerId: request.user.id,
+      },
+    });
+    response.render("index", {
+      user: request.user,
+      folders: foldersOfUser,
+    });
+  } else {
+    response.render("index");
+  }
 });
 
 app.get("/sign-up", (request, response) => {
@@ -128,6 +138,21 @@ app.get("/log-out", (request, response, next) => {
     }
     response.redirect("/");
   });
+});
+
+app.get("/create-folder", (request, response) => {
+  response.render("createFolder-form");
+});
+
+app.post("/create-folder", async (request, response) => {
+  const { folderName } = request.body;
+  await prisma.folder.create({
+    data: {
+      name: folderName,
+      ownerId: request.user.id,
+    },
+  });
+  response.redirect("/");
 });
 
 app.use((error, request, response, next) => {
