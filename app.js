@@ -155,6 +155,33 @@ app.post("/create-folder", async (request, response) => {
   response.redirect("/");
 });
 
+app.get("/folders/:id/update", async (request, response) => {
+  const { id } = request.params;
+  const folder = await prisma.folder.findUnique({
+    where: {
+      id: Number(id),
+    },
+  });
+  response.render("updateFolder-form", {
+    folder: folder,
+  });
+});
+
+app.post("/folders/:id/update", async (request, response) => {
+  const { id } = request.params;
+  const { folderName } = request.body;
+  await prisma.folder.update({
+    where: {
+      id: Number(id),
+    },
+    data: {
+      name: folderName,
+      dateOfModification: new Date(),
+    },
+  });
+  response.redirect("/");
+});
+
 app.use((error, request, response, next) => {
   console.error(error);
 });

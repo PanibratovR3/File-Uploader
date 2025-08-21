@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Update folder</title>
+    </head>
+    <body>
+        <h1>Update folder</h1>
+        <% if (locals.folder) { %>
+            <div>
+                <form action="/folders/<%= folder.id %>/update" method="POST">
+                    <div>
+                        <label for="folderName">Name of folder:</label>
+                        <input type="text" name="folderName" id="folderName" value="<%= folder.name %>" required />
+                    </div>
+                    <div>
+                        <button type="submit">Update</button>
+                    </div>
+                </form>
+            </div>
+        <% }; %>
+    </body>
+</html>

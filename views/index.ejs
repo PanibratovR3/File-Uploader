@@ -16,7 +16,12 @@
                         <div><%= user.firstName %>'s folders</div>
                         <div class="folders-containers">
                             <% folders.forEach((folder) => { %>
-                                <div><%= folder.name %></div>
+                                <div>
+                                    <div><a href="/folders/<%= folder.id %>/update"><%= folder.name %></a></div>
+                                    <% if (folder.dateOfModification !== null ) {%>
+                                        <div>Date of modification: <%= folder.dateOfModification.toLocaleDateString()%> <%= folder.dateOfModification.toLocaleTimeString() %></div>
+                                    <% }; %>
+                                </div>
                             <% }); %>
                         </div>
                     <% } else { %>
