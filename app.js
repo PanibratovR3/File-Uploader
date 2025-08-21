@@ -182,6 +182,16 @@ app.post("/folders/:id/update", async (request, response) => {
   response.redirect("/");
 });
 
+app.post("/folders/:id/delete", async (request, response) => {
+  const { id } = request.params;
+  await prisma.folder.delete({
+    where: {
+      id: Number(id),
+    },
+  });
+  response.redirect("/");
+});
+
 app.use((error, request, response, next) => {
   console.error(error);
 });
