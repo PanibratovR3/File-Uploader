@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Files</title>
+    </head>
+    <body>
+        <h1>Content of <%= fileName %></h1>
+        <div>
+            <% if (locals.files && files.length > 0) { %>
+                <div>This folder is not empty.</div>
+            <% } else { %>
+                <div>This folder is empty.</div>
+            <% }; %>
+        </div>
+    </body>
+</html>

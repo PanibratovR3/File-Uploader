@@ -192,6 +192,23 @@ app.post("/folders/:id/delete", async (request, response) => {
   response.redirect("/");
 });
 
+app.get("/folders/:id/files", async (request, response) => {
+  const { id } = request.params;
+  const { name } = await prisma.folder.findUnique({
+    where: {
+      id: Number(id),
+    },
+  });
+  const files = await prisma.file.findMany({
+    where: {
+      folderId: Number(id),
+    },
+  });
+  response.render("files", {
+    fileName: name,
+  });
+});
+
 app.use((error, request, response, next) => {
   console.error(error);
 });
