@@ -14,7 +14,15 @@ const storage = multer.diskStorage({
     cb(null, "public/data/uploads");
   },
   filename: (request, file, cb) => {
-    cb(null, file.originalname);
+    const date = new Date();
+    const uploadDate = date.toLocaleDateString().replaceAll("/", "-");
+    const uploadTime = date.getUTCMilliseconds();
+    const extName = path.extname(file.originalname);
+    const fileNameWithoutExtension = path.basename(file.originalname, extName);
+    cb(
+      null,
+      fileNameWithoutExtension + "_" + uploadDate + "_" + uploadTime + extName
+    );
   },
 });
 
@@ -281,6 +289,20 @@ app.post(
       },
     });
     response.redirect(`/folders/${folderId}/files`);
+  }
+);
+
+app.get(
+  "/folders/:folderId/files/:fileId/download",
+  async (request, response) => {
+    const { fileId } = request.params;
+    const file = await prisma.file.findUnique({
+      where: {
+        id: Number(fileId),
+      },
+    });
+    const fileToDownload = path.join(__dirname, file.path);
+    response.download(fileToDownload);
   }
 );
 

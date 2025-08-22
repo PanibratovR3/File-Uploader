@@ -23,6 +23,11 @@
                             <div>Size: <%= file.size %></div>
                             <div>Uploaded: <%= file.dateOfCreation.toLocaleDateString() %> <%= file.dateOfCreation.toLocaleTimeString() %></div>
                             <div>
+                                <a href="/folders/<%= folderId %>/files/<%= file.id %>/download">
+                                    <button type="button">Download file</button>
+                                </a>
+                            </div>
+                            <div>
                                 <form action="/folders/<%= folderId %>/files/<%= file.id %>/delete" method="POST">
                                     <button type="submit" onclick="return confirm('Are you sure you want to delete this folder?')">Delete file</button>
                                 </form>
