@@ -21,6 +21,7 @@
                                     <% if (folder.dateOfModification !== null ) {%>
                                         <div>Date of modification: <%= folder.dateOfModification.toLocaleDateString()%> <%= folder.dateOfModification.toLocaleTimeString() %></div>
                                     <% }; %>
+                                    <div>File(-s): <%= folder.numberOfFiles %></div>
                                     <div>
                                         <a href="/folders/<%= folder.id %>/files">
                                             <button type="button">Show files</button>
