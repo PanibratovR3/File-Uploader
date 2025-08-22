@@ -131,3 +131,46 @@ a:link, a:visited {
     font-weight: bold;
     font-size: 1.4rem;
 }
+
+.sign-up-header {
+    text-align: center;
+    padding: 20px 0;
+    font-weight: bold;
+    font-size: 3rem;
+    background-color: lightgreen;
+}
+
+.sign-up-row {
+    display: flex;
+    justify-content: space-between;
+    margin: 0 34vw;
+    padding: 10px 0;
+}
+
+input {
+    font: inherit;
+}
+
+.sign-up-row-submit {
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+}
+
+.sign-up-button {
+    padding: 10px 20px;
+    font-size: 2rem;
+    background-color: mediumslateblue;
+    color: white;
+    font-weight: bold;
+    border-radius: 10px;
+}
+
+.error {
+    text-align: center;
+    font-weight: bold;
+    padding: 10px 0;
+    color: darkred;
+    font-size: 1.7rem;
+
+}

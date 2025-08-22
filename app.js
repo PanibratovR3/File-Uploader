@@ -55,7 +55,7 @@ const validateUser = [
     .withMessage(`Password ${passwordMinLengthError}`)
     .custom((value) => !/\s/.test(value))
     .withMessage(`Password ${passwordSpaceError}`),
-  check("confirmPassword", "Passwords do not match").custom(
+  check("confirmPassword", "Passwords do not match.").custom(
     (value, { req }) => value === req.body.password
   ),
 ];

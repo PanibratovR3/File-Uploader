@@ -2,41 +2,42 @@
 <html>
     <head>
         <meta charset="UTF-8" />
+        <link rel="stylesheet" href="/style.css" />
         <title>Sign Up</title>
     </head>
     <body>
-        <h1>Sign up</h1>
+        <div class="sign-up-header">Sign up form</div>
         <ul>
             <% if (locals.errors) { %>
                 <% errors.forEach((error) => { %>
-                    <li><%= error.msg %></li>
+                    <li class="error"><%= error.msg %></li>
                 <% }); %>
             <% } %>
         </ul>
         <div>
             <form action="/sign-up" method="POST">
-                <div>
+                <div class="sign-up-row">
                     <label for="firstName">First name:</label>
                     <input type="text" name="firstName" id="firstName" placeholder="John" required/>
                 </div>
-                <div>
+                <div class="sign-up-row">
                     <label for="lastName">Last name:</label>
                     <input type="text" name="lastName" id="lastName" placeholder="Doe" required/>
                 </div>
-                <div>
+                <div class="sign-up-row">
                     <label for="username">Username:</label>
                     <input type="email" name="username" id="username" placeholder="jdoe@mail.com" required/>
                 </div>
-                <div>
+                <div class="sign-up-row">
                     <label for="password">Password:</label>
                     <input type="password" name="password" id="password" required />
                 </div>
-                <div>
+                <div class="sign-up-row">
                     <label for="confirmPassword">Confirm password:</label>
                     <input type="password" name="confirmPassword" id="confirmPassword" required />
                 </div>
-                <div>
-                    <button type="submit">Sign Up</button>
+                <div class="sign-up-row-submit">
+                    <button type="submit" class="sign-up-button">Submit</button>
                 </div>
             </form>
         </div>
