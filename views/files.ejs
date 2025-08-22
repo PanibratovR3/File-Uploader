@@ -7,8 +7,23 @@
     <body>
         <h1>Content of <%= fileName %></h1>
         <div>
+            <form action="/folders/<%= folderId %>/files/create" enctype="multipart/form-data" method="POST">
+                <label for="uploadFile">Choose a file to upload:</label>
+                <input type="file" name="uploadFile" id="uploadFile" required />
+                <button type="submit">Upload file</button>
+            </form>
+        </div>
+        <div>
             <% if (locals.files && files.length > 0) { %>
-                <div>This folder is not empty.</div>
+                <div class="files-container">
+                    <% files.forEach((file) => { %>
+                        <div>
+                            <div><%= file.name %></div>
+                            <div>Size: <%= file.size %></div>
+                            <div>Uploaded: <%= file.dateOfCreation.toLocaleDateString() %> <%= file.dateOfCreation.toLocaleTimeString() %></div>
+                        </div>
+                    <% }); %>
+                </div>
             <% } else { %>
                 <div>This folder is empty.</div>
             <% }; %>

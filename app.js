@@ -6,6 +6,18 @@ const prisma = require("./config/prismaClient");
 const bcrypt = require("bcryptjs");
 const { PrismaSessionStore } = require("@quixo3/prisma-session-store");
 const passport = require("./config/passport");
+const multer = require("multer");
+
+const storage = multer.diskStorage({
+  destination: (request, file, cb) => {
+    cb(null, "public/data/uploads");
+  },
+  filename: (request, file, cb) => {
+    cb(null, file.originalname);
+  },
+});
+
+const upload = multer({ storage: storage });
 
 const nameLengthError = "must be between 3 and 10 characters.";
 const nameAlphaError = "must contain only letters.";
@@ -204,10 +216,40 @@ app.get("/folders/:id/files", async (request, response) => {
       folderId: Number(id),
     },
   });
+  console.log(files);
   response.render("files", {
     fileName: name,
+    folderId: id,
+    files: files,
   });
 });
+
+app.post(
+  "/folders/:id/files/create",
+  upload.single("uploadFile"),
+  async (request, response) => {
+    const { id } = request.params;
+    const folderId = Number(id);
+    const { filename, path, size } = request.file;
+    await prisma.file.create({
+      data: {
+        name: filename,
+        size: size,
+        path: path,
+        folderId: folderId,
+      },
+    });
+    await prisma.folder.update({
+      where: {
+        id: folderId,
+      },
+      data: {
+        dateOfModification: new Date(),
+      },
+    });
+    response.redirect(`/folders/${folderId}/files`);
+  }
+);
 
 app.use((error, request, response, next) => {
   console.error(error);
