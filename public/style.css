@@ -172,5 +172,34 @@ input {
     padding: 10px 0;
     color: darkred;
     font-size: 1.7rem;
+}
 
+.log-in-header {
+    text-align: center;
+    font-weight: bold;
+    font-size: 3rem;
+    background-color: aqua;
+    padding: 20px 0;
+}
+
+.log-in-row{
+    display: flex;
+    justify-content: space-between;
+    margin: 0 35vw;
+    padding: 7px 0;
+}
+
+.log-in-row-submit {
+    display: flex;
+    justify-content: center;
+    padding-top: 10px;
+}
+
+.log-in-submit-button {
+    padding: 10px 20px;
+    background-color: mediumslateblue;
+    color: white;
+    font-weight: bold;
+    border-radius: 10px;
+    font-size: 2rem;
 }

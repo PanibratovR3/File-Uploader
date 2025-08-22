@@ -2,22 +2,23 @@
 <html>
     <head>
         <meta charset="UTF-8" />
+        <link rel="stylesheet" href="/style.css" />
         <title>Log In</title>
     </head>
     <body>
-        <h1>Log in</h1>
+        <div class="log-in-header">Log in</div>
         <div>
             <form action="/log-in" method="POST">
-                <div>
+                <div class="log-in-row">
                     <label for="username">Username:</label>
                     <input type="email" name="username" id="username" required placeholder="jdoe@mail.com" />
                 </div>
-                <div>
+                <div class="log-in-row">
                     <label for="password">Password:</label>
                     <input type="password" name="password" id="password" required />
                 </div>
-                <div>
-                    <button type="submit">Log in</button>
+                <div class="log-in-row-submit">
+                    <button type="submit" class="log-in-submit-button">Log in</button>
                 </div>
             </form>
         </div>
