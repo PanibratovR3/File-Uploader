@@ -7,6 +7,7 @@ const bcrypt = require("bcryptjs");
 const { PrismaSessionStore } = require("@quixo3/prisma-session-store");
 const passport = require("./config/passport");
 const multer = require("multer");
+const fs = require("fs");
 
 const storage = multer.diskStorage({
   destination: (request, file, cb) => {
@@ -216,7 +217,6 @@ app.get("/folders/:id/files", async (request, response) => {
       folderId: Number(id),
     },
   });
-  console.log(files);
   response.render("files", {
     fileName: name,
     folderId: id,
@@ -242,6 +242,39 @@ app.post(
     await prisma.folder.update({
       where: {
         id: folderId,
+      },
+      data: {
+        dateOfModification: new Date(),
+      },
+    });
+    response.redirect(`/folders/${folderId}/files`);
+  }
+);
+
+app.post(
+  "/folders/:folderId/files/:fileId/delete",
+  async (request, response) => {
+    const { folderId, fileId } = request.params;
+    const file = await prisma.file.findUnique({
+      where: {
+        id: Number(fileId),
+      },
+    });
+    const pathToDelete = path.join(__dirname, file.path);
+    fs.unlink(pathToDelete, (error) => {
+      if (error) {
+        return console.error(error);
+      }
+      console.log("File was deleted from uploading folder.");
+    });
+    await prisma.file.delete({
+      where: {
+        id: file.id,
+      },
+    });
+    await prisma.folder.update({
+      where: {
+        id: Number(folderId),
       },
       data: {
         dateOfModification: new Date(),
