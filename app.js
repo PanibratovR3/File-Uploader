@@ -213,6 +213,26 @@ app.post("/folders/:id/update", async (request, response) => {
 
 app.post("/folders/:id/delete", async (request, response) => {
   const { id } = request.params;
+  const filesToDelete = await prisma.file.findMany({
+    where: {
+      folderId: Number(id),
+    },
+  });
+  for (const file of filesToDelete) {
+    const filePath = file.path;
+    const pathToDelete = path.join(__dirname, filePath);
+    fs.unlink(pathToDelete, (error) => {
+      if (error) {
+        return console.error(error);
+      }
+      console.log("File was deleted from uploading folder.");
+    });
+  }
+  await prisma.file.deleteMany({
+    where: {
+      folderId: Number(id),
+    },
+  });
   await prisma.folder.delete({
     where: {
       id: Number(id),
