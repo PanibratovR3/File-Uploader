@@ -6,6 +6,7 @@
     </head>
     <body>
         <h1>Content of <%= fileName %></h1>
+        <div><a href="/">To main page</a></div>
         <div>
             <form action="/folders/<%= folderId %>/files/create" enctype="multipart/form-data" method="POST">
                 <label for="uploadFile">Choose a file to upload:</label>
