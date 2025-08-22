@@ -3,47 +3,61 @@
     <head>
         <meta charset="UTF-8" />
         <title>Main page</title>
+        <link rel="stylesheet" href="/style.css" />
     </head>
     <body>
-        <h1>File uploader</h1>
+        <div class="header">File uploader</div>
         <% if (locals.user) { %>
-            <h2>Welcome <%= user.username %></h2>
-            <a href="/log-out"><button type="button">Log out</button></a>
+            <div class="navigation">
+                <div class="greeting">Welcome, <em><%= user.username %></em>!</div>
+                <div class="navigation-control"><a href="/log-out"><button type="button" class="log-out-button">Log out</button></a></div>
+            </div>
             <div>
-                <a href="/create-folder">Add new folder</a>
+                <div class="add-folder-container">
+                    <a href="/create-folder"><button type="button" class="add-folder-button">Add new folder</button></a>
+                </div>
                 <div>
                     <% if (locals.folders && folders.length > 0) {%>
-                        <div><%= user.firstName %>'s folders</div>
-                        <div class="folders-containers">
+                        <div class="present-folders"><%= user.firstName %>'s folders</div>
+                        <div class="folders-container">
                             <% folders.forEach((folder) => { %>
-                                <div>
-                                    <div><a href="/folders/<%= folder.id %>/update"><%= folder.name %></a></div>
+                                <div class="folder-item">
+                                    <div class="folder-header">
+                                        <div class="non-folder-header-part"></div>
+                                        <div class="folder-header-part"></div>
+                                    </div>
+                                    <div class="folder-name"><a href="/folders/<%= folder.id %>/update"><%= folder.name %></a></div>
+                                    <div class="date">Created: <%= folder.dateOfCreation.toLocaleDateString()%> <%= folder.dateOfCreation.toLocaleTimeString() %></div>
                                     <% if (folder.dateOfModification !== null ) {%>
-                                        <div>Date of modification: <%= folder.dateOfModification.toLocaleDateString()%> <%= folder.dateOfModification.toLocaleTimeString() %></div>
+                                        <div class="date">Modified: <%= folder.dateOfModification.toLocaleDateString()%> <%= folder.dateOfModification.toLocaleTimeString() %></div>
                                     <% }; %>
-                                    <div>File(-s): <%= folder.numberOfFiles %></div>
-                                    <div>
+                                    <div class="files-qty">File(-s): <%= folder.numberOfFiles %></div>
+                                    <div class="folder-control">
                                         <a href="/folders/<%= folder.id %>/files">
-                                            <button type="button">Show files</button>
+                                            <button type="button" class="folder-control-button">Show files</button>
                                         </a>
                                     </div>
-                                    <div>
+                                    <div class="folder-control">
                                         <form action="/folders/<%= folder.id %>/delete" method="POST">
-                                            <button type="submit" onclick="return confirm('Are you sure you want to delete this folder? All files in this folder will be lost.')">Delete folder</button>
+                                            <button type="submit" onclick="return confirm('Are you sure you want to delete this folder? All files in this folder will be lost.')" class="folder-control-button">Delete folder</button>
                                         </form>
                                     </div>
                                 </div>
                             <% }); %>
                         </div>
                     <% } else { %>
-                        <div>There is no folder.</div>
+                        <div class="no-folders-container">No folders.</div>
                     <% } %>
                 </div>
             </div>
         <% } else { %>
-            <h2>You're not logged in.</h2>
-            <p><a href="/log-in">Log in.</a></p>
-            <p>First time? <a href="/sign-up">Sign up.</a></p>
+            <div class="navigation">
+                <div class="not-logged-in-text">You're not logged in.</div>
+                <div class="navigation-control">
+                    <div><a href="/log-in" class="navigation-item"><button type="button" class="navigation-control-button">Log in.</button></a></div>
+                    <div><a href="/sign-up" class="navigation-item"><button type="button" class="navigation-control-button">Sign up.</button></div>
+                </div>
+            </div>
         <% } %>
     </body>
 </html>

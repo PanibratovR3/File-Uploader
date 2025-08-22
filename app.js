@@ -29,6 +29,8 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
+const assetsPath = path.join(__dirname, "public");
+
 const nameLengthError = "must be between 3 and 10 characters.";
 const nameAlphaError = "must contain only letters.";
 const passwordSpaceError = "cannot contain whitespaces in the middle.";
@@ -80,6 +82,7 @@ app.use(passport.session());
 app.use(express.urlencoded({ extended: true }));
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
+app.use(express.static(assetsPath));
 
 app.get("/", async (request, response) => {
   if (request.user) {
