@@ -8,6 +8,7 @@ const { PrismaSessionStore } = require("@quixo3/prisma-session-store");
 const passport = require("./config/passport");
 const multer = require("multer");
 const fs = require("fs");
+const { filesize } = require("filesize");
 
 const storage = multer.diskStorage({
   destination: (request, file, cb) => {
@@ -225,7 +226,9 @@ app.post("/folders/:id/delete", async (request, response) => {
       if (error) {
         return console.error(error);
       }
-      console.log("File was deleted from uploading folder.");
+      console.log(
+        `File ${file.name} was successfully deleted from uploading folder.`
+      );
     });
   }
   await prisma.file.deleteMany({
@@ -253,6 +256,9 @@ app.get("/folders/:id/files", async (request, response) => {
       folderId: Number(id),
     },
   });
+  for (const file of files) {
+    file.size = filesize(file.size);
+  }
   response.render("files", {
     fileName: name,
     folderId: id,
@@ -301,7 +307,9 @@ app.post(
       if (error) {
         return console.error(error);
       }
-      console.log("File was deleted from uploading folder.");
+      console.log(
+        `File ${file.name} was successfully deleted from uploading folder.`
+      );
     });
     await prisma.file.delete({
       where: {
