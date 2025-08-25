@@ -5,6 +5,7 @@ const prisma = require("./config/prismaClient");
 const { PrismaSessionStore } = require("@quixo3/prisma-session-store");
 const passport = require("./config/passport");
 const multer = require("multer");
+require("dotenv").config({ quiet: true });
 
 const indexConroller = require("./controllers/indexController");
 const userController = require("./controllers/userController");
@@ -29,17 +30,16 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
-
 const assetsPath = path.join(__dirname, "public");
+const PORT = process.env.PORT || 3000;
 
-const PORT = 3000;
 const app = express();
 app.use(
   session({
     cookie: {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     },
-    secret: "abracadabra",
+    secret: process.env.SECRET,
     resave: true,
     saveUninitialized: true,
     store: new PrismaSessionStore(prisma, {
@@ -56,8 +56,10 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 app.use(express.static(assetsPath));
 
+// Controller for main page
 app.get("/", indexConroller.indexGet);
 
+// Controller for users
 app.get("/sign-up", userController.signUpGet);
 app.post("/sign-up", userController.signUpPost);
 app.get("/log-in", userController.logInGet);
@@ -70,25 +72,24 @@ app.post(
 );
 app.get("/log-out", userController.logOut);
 
+// Controller for folders
 app.get("/create-folder", folderController.createFolderGet);
 app.post("/create-folder", folderController.createFolderPost);
 app.get("/folders/:id/update", folderController.updateFolderGet);
 app.post("/folders/:id/update", folderController.updateFolderPost);
 app.post("/folders/:id/delete", folderController.deleteFolderPost);
 
+// Controllers for files
 app.get("/folders/:id/files", fileController.filesGet);
-
 app.post(
   "/folders/:id/files/create",
   upload.single("uploadFile"),
   fileController.createFilePost
 );
-
 app.post(
   "/folders/:folderId/files/:fileId/delete",
   fileController.deleteFilePost
 );
-
 app.get(
   "/folders/:folderId/files/:fileId/download",
   fileController.downloadFile
