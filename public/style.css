@@ -232,3 +232,86 @@ input {
     color: white;
     border-radius: 20px;
 }
+
+.file-control {
+    padding: 15px;
+}
+
+.to-main-page-button {
+    padding: 10px 20px;
+    background-color: black;
+    color: white;
+    font-weight: bold;
+    font-size: 1.3rem;
+}
+
+.upload-file-form-row {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+    padding-right: 30px;
+}
+
+.upload-file-button-submit {
+    font-size: 1.1rem;
+    padding: 5px 10px;
+    background-color: #abbdce;
+}
+
+.no-files-field {
+    padding: 50px;
+    font-weight: bold;
+    font-style: italic;
+    font-size: 3rem;
+}
+
+.files-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
+    padding: 50px;
+}
+
+.file-item {
+    border: 2px solid black;
+    max-width: 300px;
+    background-color: ivory;
+}
+
+.file-name {
+    font-weight: bold;
+    padding: 10px 5px;
+    font-size: 1.2rem;
+}
+
+.file-size {
+    font-size: 1.2rem;
+    padding-left: 10px;
+}
+
+.file-uploaded-date {
+    text-align: right;
+    font-style: italic;
+    font-size: 1.2rem;
+    padding: 10px 5px;
+}
+
+.file-control-row {
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+}
+
+.delete-file-button {
+    background-color: darkred;
+    color: white;
+    font-weight: bold;
+    padding: 5px 15px;
+    font-size: 1.1rem;
+}
+
+.download-file-button {
+    font-weight: bold;
+    padding: 5px 15px;
+    background-color: lightgray;
+}
