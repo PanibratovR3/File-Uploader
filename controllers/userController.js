@@ -1,0 +1,91 @@
+const bcrypt = require("bcryptjs");
+const { body, validationResult, check } = require("express-validator");
+const prisma = require("../config/prismaClient");
+
+const nameLengthError = "must be between 3 and 10 characters.";
+const nameAlphaError = "must contain only letters.";
+const passwordSpaceError = "cannot contain whitespaces in the middle.";
+const passwordMinLengthError = "must contain at least 7 characters.";
+
+const validateUser = [
+  body("firstName")
+    .trim()
+    .isLength({ min: 3, max: 10 })
+    .withMessage(`First name ${nameLengthError}`)
+    .isAlpha()
+    .withMessage(`First name ${nameAlphaError}`),
+  body("lastName")
+    .trim()
+    .isLength({ min: 3, max: 10 })
+    .withMessage(`Last name ${nameLengthError}`)
+    .isAlpha()
+    .withMessage(`Last name ${nameAlphaError}`),
+  body("password")
+    .trim()
+    .isLength({ min: 7 })
+    .withMessage(`Password ${passwordMinLengthError}`)
+    .custom((value) => !/\s/.test(value))
+    .withMessage(`Password ${passwordSpaceError}`),
+  check("confirmPassword", "Passwords do not match.").custom(
+    (value, { req }) => value === req.body.password
+  ),
+];
+
+function signUpGet(request, response) {
+  response.render("sign-up-form");
+}
+
+const signUpPost = [
+  validateUser,
+  async (request, response) => {
+    const errors = validationResult(request);
+    if (!errors.isEmpty()) {
+      response.render("sign-up-form", {
+        errors: errors.array(),
+      });
+    } else {
+      const { firstName, lastName, username, password } = request.body;
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const existingUsers = await prisma.user.findMany({
+        where: {
+          username: username,
+          password: hashedPassword,
+        },
+      });
+      if (existingUsers && existingUsers.length > 0) {
+        response.render("sign-up-form", {
+          errors: [
+            {
+              msg: "Error. Username or password already exists.",
+            },
+          ],
+        });
+      } else {
+        await prisma.user.create({
+          data: {
+            firstName: firstName,
+            lastName: lastName,
+            username: username,
+            password: hashedPassword,
+          },
+        });
+        response.redirect("/");
+      }
+    }
+  },
+];
+
+function logInGet(request, response) {
+  response.render("log-in-form");
+}
+
+function logOut(request, response, next) {
+  request.logout((error) => {
+    if (error) {
+      return next(error);
+    }
+    response.redirect("/");
+  });
+}
+
+module.exports = { signUpGet, signUpPost, logInGet, logOut };
