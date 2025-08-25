@@ -1,18 +1,15 @@
 const express = require("express");
 const path = require("path");
-const { body, validationResult, check } = require("express-validator");
 const session = require("express-session");
 const prisma = require("./config/prismaClient");
-const bcrypt = require("bcryptjs");
 const { PrismaSessionStore } = require("@quixo3/prisma-session-store");
 const passport = require("./config/passport");
 const multer = require("multer");
-const fs = require("fs");
-const { filesize } = require("filesize");
 
 const indexConroller = require("./controllers/indexController");
 const userController = require("./controllers/userController");
 const folderController = require("./controllers/folderController");
+const fileController = require("./controllers/fileController");
 
 const storage = multer.diskStorage({
   destination: (request, file, cb) => {
@@ -79,102 +76,22 @@ app.get("/folders/:id/update", folderController.updateFolderGet);
 app.post("/folders/:id/update", folderController.updateFolderPost);
 app.post("/folders/:id/delete", folderController.deleteFolderPost);
 
-app.get("/folders/:id/files", async (request, response) => {
-  const { id } = request.params;
-  const { name } = await prisma.folder.findUnique({
-    where: {
-      id: Number(id),
-    },
-  });
-  const files = await prisma.file.findMany({
-    where: {
-      folderId: Number(id),
-    },
-  });
-  for (const file of files) {
-    file.size = filesize(file.size);
-  }
-  response.render("files", {
-    fileName: name,
-    folderId: id,
-    files: files,
-  });
-});
+app.get("/folders/:id/files", fileController.filesGet);
 
 app.post(
   "/folders/:id/files/create",
   upload.single("uploadFile"),
-  async (request, response) => {
-    const { id } = request.params;
-    const folderId = Number(id);
-    const { filename, path, size } = request.file;
-    await prisma.file.create({
-      data: {
-        name: filename,
-        size: size,
-        path: path,
-        folderId: folderId,
-      },
-    });
-    await prisma.folder.update({
-      where: {
-        id: folderId,
-      },
-      data: {
-        dateOfModification: new Date(),
-      },
-    });
-    response.redirect(`/folders/${folderId}/files`);
-  }
+  fileController.createFilePost
 );
 
 app.post(
   "/folders/:folderId/files/:fileId/delete",
-  async (request, response) => {
-    const { folderId, fileId } = request.params;
-    const file = await prisma.file.findUnique({
-      where: {
-        id: Number(fileId),
-      },
-    });
-    const pathToDelete = path.join(__dirname, file.path);
-    fs.unlink(pathToDelete, (error) => {
-      if (error) {
-        return console.error(error);
-      }
-      console.log(
-        `File ${file.name} was successfully deleted from uploading folder.`
-      );
-    });
-    await prisma.file.delete({
-      where: {
-        id: file.id,
-      },
-    });
-    await prisma.folder.update({
-      where: {
-        id: Number(folderId),
-      },
-      data: {
-        dateOfModification: new Date(),
-      },
-    });
-    response.redirect(`/folders/${folderId}/files`);
-  }
+  fileController.deleteFilePost
 );
 
 app.get(
   "/folders/:folderId/files/:fileId/download",
-  async (request, response) => {
-    const { fileId } = request.params;
-    const file = await prisma.file.findUnique({
-      where: {
-        id: Number(fileId),
-      },
-    });
-    const fileToDownload = path.join(__dirname, file.path);
-    response.download(fileToDownload);
-  }
+  fileController.downloadFile
 );
 
 app.use((error, request, response, next) => {
