@@ -212,19 +212,19 @@ input {
     padding: 20px 0;
 }
 
-.add-folder-form-row {
+.add-folder-form-row, .update-folder-form-row {
     display: flex;
     justify-content: center;
     gap: 16px;
     padding: 30px 0;
 }
 
-.add-folder-form-row label {
+.add-folder-form-row label, .update-folder-form-row label {
     font-weight: bold;
     font-size: 1.5rem;
 }
 
-.add-folder-submit-button {
+.add-folder-submit-button, .update-folder-submit-button {
     padding: 20px 40px;
     font-weight: bold;
     font-size: 1.5rem;

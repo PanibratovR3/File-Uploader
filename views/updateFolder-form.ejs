@@ -3,18 +3,19 @@
     <head>
         <meta charset="UTF-8" />
         <title>Update folder</title>
+        <link rel="stylesheet" href="/style.css">
     </head>
     <body>
-        <h1>Update folder</h1>
+        <div class="options-folder-header">Update folder</div>
         <% if (locals.folder) { %>
             <div>
                 <form action="/folders/<%= folder.id %>/update" method="POST">
-                    <div>
+                    <div class="update-folder-form-row">
                         <label for="folderName">Name of folder:</label>
                         <input type="text" name="folderName" id="folderName" value="<%= folder.name %>" required />
                     </div>
-                    <div>
-                        <button type="submit">Update</button>
+                    <div class="update-folder-form-row">
+                        <button type="submit" class="update-folder-submit-button">Update</button>
                     </div>
                 </form>
             </div>

@@ -12,10 +12,11 @@ const { filesize } = require("filesize");
 
 const indexConroller = require("./controllers/indexController");
 const userController = require("./controllers/userController");
+const folderController = require("./controllers/folderController");
 
 const storage = multer.diskStorage({
   destination: (request, file, cb) => {
-    cb(null, "public/data/uploads");
+    cb(null, path.join(__dirname, "public/data/uploads"));
   },
   filename: (request, file, cb) => {
     const date = new Date();
@@ -61,11 +62,8 @@ app.use(express.static(assetsPath));
 app.get("/", indexConroller.indexGet);
 
 app.get("/sign-up", userController.signUpGet);
-
 app.post("/sign-up", userController.signUpPost);
-
 app.get("/log-in", userController.logInGet);
-
 app.post(
   "/log-in",
   passport.authenticate("local", {
@@ -73,82 +71,13 @@ app.post(
     failureRedirect: "/",
   })
 );
-
 app.get("/log-out", userController.logOut);
 
-app.get("/create-folder", (request, response) => {
-  response.render("createFolder-form");
-});
-
-app.post("/create-folder", async (request, response) => {
-  const { folderName } = request.body;
-  await prisma.folder.create({
-    data: {
-      name: folderName,
-      ownerId: request.user.id,
-    },
-  });
-  response.redirect("/");
-});
-
-app.get("/folders/:id/update", async (request, response) => {
-  const { id } = request.params;
-  const folder = await prisma.folder.findUnique({
-    where: {
-      id: Number(id),
-    },
-  });
-  response.render("updateFolder-form", {
-    folder: folder,
-  });
-});
-
-app.post("/folders/:id/update", async (request, response) => {
-  const { id } = request.params;
-  const { folderName } = request.body;
-  await prisma.folder.update({
-    where: {
-      id: Number(id),
-    },
-    data: {
-      name: folderName,
-      dateOfModification: new Date(),
-    },
-  });
-  response.redirect("/");
-});
-
-app.post("/folders/:id/delete", async (request, response) => {
-  const { id } = request.params;
-  const filesToDelete = await prisma.file.findMany({
-    where: {
-      folderId: Number(id),
-    },
-  });
-  for (const file of filesToDelete) {
-    const filePath = file.path;
-    const pathToDelete = path.join(__dirname, filePath);
-    fs.unlink(pathToDelete, (error) => {
-      if (error) {
-        return console.error(error);
-      }
-      console.log(
-        `File ${file.name} was successfully deleted from uploading folder.`
-      );
-    });
-  }
-  await prisma.file.deleteMany({
-    where: {
-      folderId: Number(id),
-    },
-  });
-  await prisma.folder.delete({
-    where: {
-      id: Number(id),
-    },
-  });
-  response.redirect("/");
-});
+app.get("/create-folder", folderController.createFolderGet);
+app.post("/create-folder", folderController.createFolderPost);
+app.get("/folders/:id/update", folderController.updateFolderGet);
+app.post("/folders/:id/update", folderController.updateFolderPost);
+app.post("/folders/:id/delete", folderController.deleteFolderPost);
 
 app.get("/folders/:id/files", async (request, response) => {
   const { id } = request.params;
