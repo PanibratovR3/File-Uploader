@@ -10,6 +10,8 @@ const multer = require("multer");
 const fs = require("fs");
 const { filesize } = require("filesize");
 
+const indexConroller = require("./controllers/indexController");
+
 const storage = multer.diskStorage({
   destination: (request, file, cb) => {
     cb(null, "public/data/uploads");
@@ -84,29 +86,7 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 app.use(express.static(assetsPath));
 
-app.get("/", async (request, response) => {
-  if (request.user) {
-    const foldersOfUser = await prisma.folder.findMany({
-      where: {
-        ownerId: request.user.id,
-      },
-    });
-    for (const folder of foldersOfUser) {
-      const files = await prisma.file.findMany({
-        where: {
-          folderId: folder.id,
-        },
-      });
-      folder.numberOfFiles = files.length;
-    }
-    response.render("index", {
-      user: request.user,
-      folders: foldersOfUser,
-    });
-  } else {
-    response.render("index");
-  }
-});
+app.get("/", indexConroller.indexGet);
 
 app.get("/sign-up", (request, response) => {
   response.render("sign-up-form");
