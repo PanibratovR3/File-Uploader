@@ -2,18 +2,19 @@
 <html>
     <head>
         <meta charset="UTF-8" />
+        <link rel="stylesheet" href="/style.css">
         <title>Add new folder</title>
     </head>
     <body>
-        <h1>Add new folder</h1>
+        <div class="options-folder-header">Add new folder</div>
         <div>
             <form action="/create-folder" method="POST">
-                <div>
+                <div class="add-folder-form-row">
                     <label for="folderName">Name of folder:</label>
                     <input type="text" name="folderName" id="folderName" maxlength="50" required />
                 </div>
-                <div>
-                    <button type="submit">Add folder</button>
+                <div class="add-folder-form-row">
+                    <button type="submit" class="add-folder-submit-button">Add folder</button>
                 </div>
             </form>
         </div>

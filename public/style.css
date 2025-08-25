@@ -203,3 +203,32 @@ input {
     border-radius: 10px;
     font-size: 2rem;
 }
+
+.options-folder-header{
+    text-align: center;
+    font-size: 3rem;
+    font-weight: bold;
+    background-color:gold;
+    padding: 20px 0;
+}
+
+.add-folder-form-row {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    padding: 30px 0;
+}
+
+.add-folder-form-row label {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.add-folder-submit-button {
+    padding: 20px 40px;
+    font-weight: bold;
+    font-size: 1.5rem;
+    background-color: darkgreen;
+    color: white;
+    border-radius: 20px;
+}
