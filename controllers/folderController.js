@@ -3,7 +3,7 @@ const prisma = require("../config/prismaClient");
 const path = require("path");
 
 function createFolderGet(request, response) {
-  response.render("createFolder-form");
+  response.render("createFolder");
 }
 
 async function createFolderPost(request, response) {
@@ -24,7 +24,7 @@ async function updateFolderGet(request, response) {
       id: Number(id),
     },
   });
-  response.render("updateFolder-form", {
+  response.render("updateFolder", {
     folder: folder,
   });
 }
