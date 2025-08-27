@@ -5,6 +5,7 @@ const prisma = require("./config/prismaClient");
 const { PrismaSessionStore } = require("@quixo3/prisma-session-store");
 const passport = require("./config/passport");
 const multer = require("multer");
+const { v4: uuidv4 } = require("uuid");
 require("dotenv").config({ quiet: true });
 
 const indexConroller = require("./controllers/indexController");
@@ -18,14 +19,10 @@ const storage = multer.diskStorage({
   },
   filename: (request, file, cb) => {
     const date = new Date();
-    const uploadDate = date.toLocaleDateString().replaceAll("/", "-");
-    const uploadTime = date.getUTCMilliseconds();
+    const uniqueIdentifier = uuidv4();
     const extName = path.extname(file.originalname);
     const fileNameWithoutExtension = path.basename(file.originalname, extName);
-    cb(
-      null,
-      fileNameWithoutExtension + "_" + uploadDate + "_" + uploadTime + extName
-    );
+    cb(null, fileNameWithoutExtension + "_" + uniqueIdentifier + extName);
   },
 });
 

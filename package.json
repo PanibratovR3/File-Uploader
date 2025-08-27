@@ -24,6 +24,7 @@
     "filesize": "^11.0.2",
     "multer": "^2.0.2",
     "passport": "^0.7.0",
-    "passport-local": "^1.0.0"
+    "passport-local": "^1.0.0",
+    "uuid": "^11.1.0"
   }
 }
